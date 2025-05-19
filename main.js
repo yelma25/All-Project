@@ -1,63 +1,130 @@
-const slides = document.querySelectorAll(".slide");
-const next = document.querySelector("#next");
-const prev = document.querySelector("#prev");
-const auto = false;
-const intervalTime = 5000;
-let slideInterval;
+// const TypeWriter = function (txtElement, Words, Wait = 3000) {
+//   this.txtElement = txtElement;
+//   this.Words = Words;
+//   this.txt = "";
+//   this.WordIndex = 0;
+//   this.Wait = parseInt(Wait, 10);
+//   this.type();
+//   this.isDeleting = false;
+// };
 
-const nextSlide = () => {
-  //Get current class
-  const current = document.querySelector(".current");
-  //Remove current class
-  current.classList.remove("current");
-  //Check for next slide
-  if (current.nextElementSibling) {
-    //Add current to next sibling
-    current.nextElementSibling.classList.add("current");
-  } else {
-    //Add current to start
-    slides[0].classList.add("current");
+//Type Method
+// TypeWriter.prototype.type = function () {
+//   //Current index of word
+//   const current = this.WordIndex % this.Words.length;
+//   //Get full text of current word
+//   const fullTxt = this.Words[current];
+
+//   //check if deleting
+//   if (this.isDeleting) {
+//     //Remove char
+//     this.txt = fullTxt.substring(0, this.txt.length - 1);
+//   } else {
+//     //Add char
+//     this.txt = fullTxt.substring(0, this.txt.length + 1);
+//   }
+//   //Insert txt into element
+//   this.txtElement.innerHTML = `<span class="txt">${this.txt}</span>`;
+
+//   //Initial type Speed
+//   let typeSpeed = 300;
+
+//   if (this.isDeleting) {
+//     typeSpeed /= 2;
+//   }
+
+//   //if word is complete
+//   if (!this.isDeleting && this.txt === fullTxt) {
+//     //Make pause at end
+//     typeSpeed = this.Wait;
+//     //set delete to true
+//     this.isDeleting = true;
+//   } else if (this.isDeleting && this.txt === "") {
+//     this.isDeleting = false;
+//     //move to next word
+//     this.WordIndex++;
+//     //pause before start typing
+//     typeSpeed = 500;
+//   }
+
+//   setTimeout(() => this.type(), typeSpeed);
+
+//   // Type Speed
+// };
+// //Init on Dom Laod
+// document.addEventListener("DOMContentLoaded", init);
+
+// //Init App
+// function init() {
+//   const txtElement = document.querySelector(".txt-type");
+//   const Words = JSON.parse(txtElement.getAttribute("data-Words"));
+//   const Wait = txtElement.getAttribute("data-wait");
+//   //Init TypeWriter
+//   new TypeWriter(txtElement, Words, Wait);
+// }
+
+// //ES6 CLASS
+class TypeWriter {
+  constructor(txtElement, Words, Wait = 3000) {
+    this.txtElement = txtElement;
+    this.Words = Words;
+    this.txt = "";
+    this.WordIndex = 0;
+    this.Wait = parseInt(Wait, 10);
+    this.type();
+    this.isDeleting = false;
   }
-  setTimeout(() => current.classList.remove("current"));
-};
 
-const prevSlide = () => {
-  //Get current class
-  const current = document.querySelector(".current");
-  //Remove current class
-  current.classList.remove("current");
-  //Check for next slide
-  if (current.previousElementSibling) {
-    //Add current to next sibling
-    current.previousElementSibling.classList.add("current");
-  } else {
-    //Add current to start
-    slides[slides.length - 1].classList.add("current");
+  type() {
+    //Current index of word
+    const current = this.WordIndex % this.Words.length;
+    //Get full text of current word
+    const fullTxt = this.Words[current];
+
+    //check if deleting
+    if (this.isDeleting) {
+      //Remove char
+      this.txt = fullTxt.substring(0, this.txt.length - 1);
+    } else {
+      //Add char
+      this.txt = fullTxt.substring(0, this.txt.length + 1);
+    }
+    //Insert txt into element
+    this.txtElement.innerHTML = `<span class="txt">${this.txt}</span>`;
+
+    //Initial type Speed
+    let typeSpeed = 300;
+
+    if (this.isDeleting) {
+      typeSpeed /= 2;
+    }
+
+    //if word is complete
+    if (!this.isDeleting && this.txt === fullTxt) {
+      //Make pause at end
+      typeSpeed = this.Wait;
+      //set delete to true
+      this.isDeleting = true;
+    } else if (this.isDeleting && this.txt === "") {
+      this.isDeleting = false;
+      //move to next word
+      this.WordIndex++;
+      //pause before start typing
+      typeSpeed = 500;
+    }
+
+    setTimeout(() => this.type(), typeSpeed);
   }
-  setTimeout(() => current.classList.remove("current"));
-};
+}
 
-//Button events
-next.addEventListener("click", (e) => {
-  nextSlide();
+//Init on Dom Laod
+document.addEventListener("DOMContentLoaded", init);
 
-  if (auto) {
-    clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, intervalTime);
-  }
-});
-
-prev.addEventListener("click", (e) => {
-  prevSlide();
-
-  if (auto) {
-    clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, intervalTime);
-  }
-});
-
-//Auto slide
-if (auto) {
-  ////Run next slide at interval time
-  slideInterval = setInterval(nextSlide, intervalTime);
+//Init App
+function init() {
+  const txtElement = document.querySelector(".txt-type");
+  const Words = JSON.parse(txtElement.getAttribute("data-Words"));
+  const Wait = txtElement.getAttribute("data-wait");
+  //Init TypeWriter
+  new TypeWriter(txtElement, Words, Wait);
 }
